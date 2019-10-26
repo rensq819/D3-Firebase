@@ -2,10 +2,14 @@
 const svg = d3.select('svg');
 
 d3.json('menu.json').then(data => {
+  const min = d3.min(data, d => d.orders);
+  const max = d3.max(data, d => d.orders);
+  const extent = d3.extent(data, d => d.orders); // find both min and max
+
   // linear scale
   const y = d3
     .scaleLinear()
-    .domain([0, 1000]) // min 0, max 1000
+    .domain([0, max]) // min 0, max 1000
     .range([0, 500]);
 
   // band scale
@@ -15,7 +19,7 @@ d3.json('menu.json').then(data => {
     .range([0, 500])
     .paddingInner(0.2)
     .paddingOuter(0.2);
-    
+
   // join data to rects
   const rects = svg.selectAll('rect').data(data);
 
