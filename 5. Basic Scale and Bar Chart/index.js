@@ -16,6 +16,9 @@ const graph = svg
   .attr('height', graphHeight)
   .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
+const xAxisGroup = graph.append('g');
+const yAxisGroup = graph.append('g');
+
 d3.json('menu.json').then(data => {
   const min = d3.min(data, d => d.orders);
   const max = d3.max(data, d => d.orders);
@@ -53,4 +56,11 @@ d3.json('menu.json').then(data => {
     .attr('height', d => y(d.orders))
     .attr('fill', 'orange')
     .attr('x', d => x(d.name));
+
+  // create and call the 
+  const xAxis = d3.axisBottom(x);
+  const yAxis = d3.axisLeft(y);
+
+  xAxisGroup.call(xAxis);
+  yAxisGroup.call(yAxis);
 });
