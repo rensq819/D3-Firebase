@@ -61,8 +61,18 @@ d3.json('menu.json').then(data => {
 
   // create and call the
   const xAxis = d3.axisBottom(x);
-  const yAxis = d3.axisLeft(y);
+  const yAxis = d3
+    .axisLeft(y)
+    .ticks(3) // try to get only around 3 ticks
+    .tickFormat(d => d + '  orders');
 
   xAxisGroup.call(xAxis);
   yAxisGroup.call(yAxis);
+
+  // apply transform/rotate on all text on x axis
+  xAxisGroup
+    .selectAll('text')
+    .attr('fill', 'orange')
+    .attr('transform', 'rotate(-40)')
+    .attr('text-anchor', 'end'); // rotate at the end of the text
 });
