@@ -28,7 +28,7 @@ d3.json('menu.json').then(data => {
   const y = d3
     .scaleLinear()
     .domain([0, max]) // min 0, max 1000
-    .range([0, graphHeight]);
+    .range([graphHeight, 0]);
 
   // band scale
   const x = d3
@@ -44,18 +44,20 @@ d3.json('menu.json').then(data => {
   // add attrs to rects already in DOM, just in case there's data already in DOM
   rects
     .attr('width', x.bandwidth())
-    .attr('height', d => y(d.orders))
+    .attr('height', d => graphHeight - y(d.orders))
     .attr('fill', 'orange')
-    .attr('x', d => x(d.name));
+    .attr('x', d => x(d.name))
+    .attr('y', d => y(d.orders)); // rect always runs from top to down, so we need to set a starting/top position
 
   // append new rects
   rects
     .enter()
     .append('rect')
     .attr('width', x.bandwidth())
-    .attr('height', d => y(d.orders))
+    .attr('height', d => graphHeight - y(d.orders))
     .attr('fill', 'orange')
-    .attr('x', d => x(d.name));
+    .attr('x', d => x(d.name))
+    .attr('y', d => y(d.orders));
 
   // create and call the
   const xAxis = d3.axisBottom(x);
