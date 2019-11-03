@@ -5,6 +5,17 @@ const svg = d3
   .attr('width', 600)
   .attr('height', 600);
 
+// create margin and dimensions
+const margin = { top: 20, right: 20, bottom: 100, left: 100 };
+const graphWidth = 600 - margin.left - margin.right;
+const graphHeight = 600 - margin.top - margin.bottom;
+
+const graph = svg
+  .append('g')
+  .attr('width', graphWidth)
+  .attr('height', graphHeight)
+  .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
 d3.json('menu.json').then(data => {
   const min = d3.min(data, d => d.orders);
   const max = d3.max(data, d => d.orders);
@@ -25,7 +36,7 @@ d3.json('menu.json').then(data => {
     .paddingOuter(0.2);
 
   // join data to rects
-  const rects = svg.selectAll('rect').data(data);
+  const rects = graph.selectAll('rect').data(data);
 
   // add attrs to rects already in DOM, just in case there's data already in DOM
   rects
