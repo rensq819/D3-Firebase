@@ -98,4 +98,10 @@ db.collection('dishes')
     });
 
     update(data);
+
+    d3.interval(() => {
+      // data.pop(); // taking out a data
+      // data[0].orders += 50; // changing a data
+      // update(data);
+    }, 1000); // ms
   });
