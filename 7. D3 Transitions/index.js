@@ -61,13 +61,14 @@ const update = data => {
   rects.exit().remove();
 
   /** 4. update current shapes in the dom */
-  // add attrs to rects already in DOM, just in case there's data already in DOM
+  // add attrs to rects already in DOM, update with animation, just in case there's data already in DOM
   rects
     .attr('width', x.bandwidth())
-    .attr('height', d => graphHeight - y(d.orders))
     .attr('fill', 'orange')
     .attr('x', d => x(d.name))
-    .attr('y', d => y(d.orders)); // rect always runs from top to down, so we need to set a starting/top position
+    .transition().duration(1000) // update already has a start position, only need to put down ending postions below
+      .attr('height', d => graphHeight - y(d.orders))
+      .attr('y', d => y(d.orders)); // rect always runs from top to down, so we need to set a starting/top position
 
   /** 5. append the enter selection to the dom */
   // append new rects with animation
