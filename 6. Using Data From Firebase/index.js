@@ -89,19 +89,45 @@ const update = data => {
   yAxisGroup.call(yAxis);
 };
 
-db.collection('dishes')
-  .get()
-  .then(res => {
-    var data = [];
-    res.docs.forEach(doc => {
-      data.push(doc.data());
-    });
+var data = [];
+// real time listening
+db.collection('dishes').onSnapshot(res => {
+  res.docChanges().forEach(change => {
+    const doc = { ...change.doc.data(), id: change.doc.id };
 
-    update(data);
-
-    d3.interval(() => {
-      // data.pop(); // taking out a data
-      // data[0].orders += 50; // changing a data
-      // update(data);
-    }, 1000); // ms
+    switch (change.type) {
+      case 'added':
+        data.push(doc);
+        break;
+      case 'modified':
+        const index = data.findIndex(item => item.id === doc.id); // indexOf expects actual value while findIndex expects callback
+        data[index] = doc; // overwrite the original record
+        break;
+      case 'removed':
+        data = data.filter(item => item.id !== doc.id);
+        break;
+      default:
+        break;
+    }
   });
+
+  update(data);
+});
+
+// listen just for once
+// db.collection('dishes')
+//   .get()
+//   .then(res => {
+//     var data = [];
+//     res.docs.forEach(doc => {
+//       data.push(doc.data());
+//     });
+
+//     update(data);
+
+//     d3.interval(() => {
+//       // data.pop(); // taking out a data
+//       // data[0].orders += 50; // changing a data
+//       // update(data);
+//     }, 1000); // ms
+//   });
