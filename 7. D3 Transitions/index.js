@@ -43,6 +43,9 @@ xAxisGroup
   .attr('transform', 'rotate(-40)')
   .attr('text-anchor', 'end'); // rotate at the end of the text
 
+// assgin variable to transition
+const t = d3.transition().duration(1000);
+
 // update function
 const update = data => {
   /** 1. update any scale (domains) if they rely on our data */
@@ -65,22 +68,24 @@ const update = data => {
   rects
     .attr('width', x.bandwidth())
     .attr('fill', 'orange')
-    .attr('x', d => x(d.name))
-    .transition().duration(1000) // update already has a start position, only need to put down ending postions below
-      .attr('height', d => graphHeight - y(d.orders))
-      .attr('y', d => y(d.orders)); // rect always runs from top to down, so we need to set a starting/top position
+    .attr('x', d => x(d.name)); // below are commented out because we have the .merge() on enter()
+  // .transition(t) // update already has a start position, only need to put down ending postions below
+  // .attr('height', d => graphHeight - y(d.orders))
+  // .attr('y', d => y(d.orders)); // rect always runs from top to down, so we need to set a starting/top position
 
   /** 5. append the enter selection to the dom */
   // append new rects with animation
   rects
     .enter() // create new rect thats not in the DOM
     .append('rect')
-    .attr('width', x.bandwidth())
+    // .attr('width', 0)
     .attr('height', 0)
     .attr('fill', 'orange')
     .attr('x', d => x(d.name))
     .attr('y', graphHeight)
-    .transition().duration(1000) // transition state goes after
+    .merge(rects) // apply below to both groups
+    .transition(t) // transition state goes after
+      .attrTween('width', widthTween)
       .attr('y', d => y(d.orders))
       .attr('height', d => graphHeight - y(d.orders));
 
@@ -113,3 +118,17 @@ db.collection('dishes').onSnapshot(res => {
 
   update(data);
 });
+
+// TWEENS
+const widthTween = d => {
+  // define interpolation
+  // d3.interpolate returns a function which we call 'i'
+  let i = d3.interpolate(0, x.bandwidth());
+
+  // return a function which takes in a time ticker 't'
+  // should be a value between 0-1
+  return function(t) {
+    // return the value from passing hte ticker into the interpolation
+    return i(t);
+  };
+};
