@@ -1,0 +1,40 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>SVG Basics</title>
+  </head>
+  <body>
+    <div class="canvas"></div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: 'AIzaSyAv3u1CIBpC9jna2pKfS7DdIpunL8KrDp4',
+        authDomain: 'd3-firebase-3bb39.firebaseapp.com',
+        databaseURL: 'https://d3-firebase-3bb39.firebaseio.com',
+        projectId: 'd3-firebase-3bb39',
+        storageBucket: 'd3-firebase-3bb39.appspot.com',
+        messagingSenderId: '538603074919',
+        appId: '1:538603074919:web:909d40a98a268a9f9aabc2',
+        measurementId: 'G-BFXTH10M3L'
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+
+      const db = firebase.firestore();
+    </script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
