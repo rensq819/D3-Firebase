@@ -31,10 +31,19 @@ const update = data => {
   const paths = graph.selectAll('path').data(pie(data));
 
   // exit selection
-  paths.exit().remove();
+  paths
+    .exit()
+    .transition()
+    .duration(750)
+    .attrTween('d', arcTweenExit)
+    .remove();
 
   // handle the current DOM paths updates
-  paths.attr('d', arcPath);
+  paths
+    .attr('d', arcPath)
+    .transition()
+    .duration(750)
+    .attrTween('d', arcTweenUpdate);
 
   // enter selection
   paths
@@ -44,6 +53,9 @@ const update = data => {
     .attr('stroke', '#fff')
     .attr('stroke-width', 3)
     .attr('fill', d => color(d.data.name))
+    .each(function(d) {
+      this._current = d; // for each path we loop through, fire this function to store the current data, for comparison later
+    })
     .transition()
     .duration(750)
     .attrTween('d', arcTweenEnter);
@@ -82,3 +94,23 @@ const arcTweenEnter = d => {
     return arcPath(d);
   };
 };
+
+const arcTweenExit = d => {
+  var i = d3.interpolate(d.startAngle, d.endAngle); // call this to get a value inbetween
+  return function(t) {
+    d.startAngle = i(t);
+    return arcPath(d);
+  };
+};
+
+// use function keyword to allow use of 'this'
+function arcTweenUpdate(d) {
+  // interpolate between the two objects (ori and edited)
+  var i = d3.interpolate(this._current, d);
+
+  // update the current prop with new updated data
+  this._current = i(1); // d
+  return function(t) {
+    return arcPath(i(t));
+  };
+}
