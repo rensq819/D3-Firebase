@@ -26,3 +26,28 @@ btns.forEach(btn => {
     formAct.textContent = activity;
   });
 });
+
+// form submit
+form.addEventListener('submit', e => {
+  // prevent default action (reload)
+  e.preventDefault();
+
+  const distance = parseInt(input.value);
+  if (distance) {
+    db.collection('activities')
+      .add({
+        distance,
+        activity,
+        date: new Date().toString()
+      })
+      .then(() => {
+        error.textContent = '';
+        input.value = '';
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  } else {
+    error.textContent = 'Please enter a distance.';
+  }
+});
