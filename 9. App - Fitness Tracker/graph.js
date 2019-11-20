@@ -35,6 +35,24 @@ const update = data => {
   x.domain(d3.extent(data, d => new Date(d.date)));
   y.domain([0, d3.max(data, d => d.distance)]);
 
+  // create circles for objects
+  const circles = graph.selectAll('cicle').data(data);
+
+  // remove unwanted points
+  circles.exit().remove();
+
+  // update current points
+  circles.attr('cx', d => x(new Date(d.date))).attr('cy', d => y(d.distance));
+
+  // add new points
+  circles
+    .enter()
+    .append('circle')
+    .attr('r', 4)
+    .attr('cx', d => x(new Date(d.date))) // cx: center corodiante, pass in data to x scale
+    .attr('cy', d => y(d.distance))
+    .attr('fill', '#ccc');
+
   // create axes
   const xAxis = d3
     .axisBottom(x)
